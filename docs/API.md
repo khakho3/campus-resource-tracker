@@ -52,6 +52,9 @@ Content-Type: application/json
 Each valid scan toggles the demo staff member between present and absent.
 Unknown RFID values return HTTP 404.
 
+For hardware testing, scan the RFID card once in Serial Monitor and register
+that UID for `STAFF-001` in MySQL before expecting HTTP 200.
+
 ## Submit ESP32 readings
 
 ```http
@@ -70,6 +73,9 @@ Content-Type: application/json
 
 Unknown or duplicate seat codes are rejected. Valid readings update all values
 and add the submitted payload to `sensor_events`.
+
+The ESP32 wiring and full Arduino sketch are documented in
+[ESP32_HARDWARE.md](ESP32_HARDWARE.md).
 
 ## Restore the demo
 

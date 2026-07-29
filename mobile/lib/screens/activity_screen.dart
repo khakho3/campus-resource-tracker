@@ -23,7 +23,7 @@ class ActivityScreen extends StatelessWidget {
           OfflineBanner(controller: controller),
           const SectionHeading(
             'Library activity',
-            subtitle: 'Motion, staff, hours, and current operating state',
+            subtitle: 'Staff, hours, and current operating state',
           ),
           const SizedBox(height: 18),
           Card(
@@ -31,17 +31,6 @@ class ActivityScreen extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
               child: Column(
                 children: [
-                  InfoRow(
-                    icon: Icons.sensors_rounded,
-                    label: 'Motion status',
-                    value: status.motionDetected
-                        ? 'Activity detected'
-                        : 'Inactive',
-                    valueColor: status.motionDetected
-                        ? AppColors.green
-                        : AppColors.amber,
-                  ),
-                  const Divider(height: 1),
                   InfoRow(
                     icon: Icons.badge_rounded,
                     label: 'Staff presence',

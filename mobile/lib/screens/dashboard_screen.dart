@@ -14,6 +14,14 @@ class DashboardScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final status = controller.status!;
+    final presentation = presentationFor(status);
+    final stateLabel = switch (status.status) {
+      'AVAILABLE' => 'Open',
+      'FULL' => 'Full',
+      'CLOSED' => 'Closed',
+      'INACTIVE' => 'Idle',
+      _ => status.status,
+    };
     return RefreshablePage(
       onRefresh: controller.refresh,
       child: Column(
@@ -68,12 +76,10 @@ class DashboardScreen extends StatelessWidget {
                         : AppColors.amber,
                   ),
                   MetricCard(
-                    icon: Icons.sensors_rounded,
-                    label: 'Activity',
-                    value: status.motionDetected ? 'Detected' : 'Inactive',
-                    color: status.motionDetected
-                        ? AppColors.green
-                        : AppColors.amber,
+                    icon: presentation.icon,
+                    label: 'Library state',
+                    value: stateLabel,
+                    color: presentation.color,
                   ),
                 ],
               );

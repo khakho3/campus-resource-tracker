@@ -39,9 +39,9 @@ StatePresentation presentationFor(LibraryStatus status) {
     case 'INACTIVE':
       return const StatePresentation(
         color: AppColors.amber,
-        icon: Icons.motion_photos_off_rounded,
-        title: 'No Recent Activity',
-        description: 'The library is open, but motion is not detected',
+        icon: Icons.hourglass_empty_rounded,
+        title: 'Library Idle',
+        description: 'The library is open, but no recent activity was recorded',
       );
     default:
       return const StatePresentation(

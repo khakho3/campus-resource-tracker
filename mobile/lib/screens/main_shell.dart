@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import '../state/library_controller.dart';
 import 'activity_screen.dart';
 import 'dashboard_screen.dart';
-import 'demo_screen.dart';
 import 'seats_screen.dart';
 
 class MainShell extends StatefulWidget {
@@ -78,11 +77,6 @@ class _MainShellState extends State<MainShell> {
                 selectedIcon: Icon(Icons.sensors_rounded),
                 label: 'Activity',
               ),
-              NavigationDestination(
-                icon: Icon(Icons.tune_outlined),
-                selectedIcon: Icon(Icons.tune_rounded),
-                label: 'Demo',
-              ),
             ],
           ),
         );
@@ -108,7 +102,6 @@ class _MainShellState extends State<MainShell> {
         DashboardScreen(controller: controller),
         SeatsScreen(controller: controller),
         ActivityScreen(controller: controller),
-        DemoScreen(controller: controller),
       ],
     );
   }

@@ -33,11 +33,7 @@ void main() {
     await tester.tap(find.text('Activity'));
     await tester.pumpAndSettle();
     expect(find.text('Library activity'), findsOneWidget);
-
-    await tester.tap(find.text('Demo'));
-    await tester.pumpAndSettle();
-    expect(find.text('Demo controls'), findsOneWidget);
-    expect(find.text('Simulate staff RFID scan'), findsOneWidget);
+    expect(find.text('Demo'), findsNothing);
   });
 
   testWidgets('cached data shows a clear offline banner and retry button', (

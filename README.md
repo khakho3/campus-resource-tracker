@@ -4,20 +4,21 @@ Campus Resource Tracker is a hackathon MVP for checking GCTU Library seat
 availability before walking to the library. The current release focuses only
 on the library. It ships a Flutter app, a FastAPI REST API, and a MySQL schema.
 
-The ESP32, ultrasonic seat sensors, PIR motion sensor, and RFID reader are not
-connected yet. The app includes Demo Controls that exercise the same backend
-state the hardware will update later.
+The current demo supports hardware updates from an ESP32 over HTTP. The mobile
+app shows the live library state, seats, and staff presence from the FastAPI
+backend.
 
 ## What works
 
 - Live `AVAILABLE`, `FULL`, `CLOSED`, and `INACTIVE` library states
-- GCTU Library totals, 50/100% occupancy, seats A1/A2, staff, and motion status
+- GCTU Library totals, 50/100% occupancy, seats A1/A2, and staff state
 - Pull-to-refresh and responsive Material 3 layouts
 - Cached information with a visible `OFFLINE` warning and retry action
-- Software controls for library access, both seats, motion, RFID, and reset
+- Clean demo mobile app with Home, Seats, and Activity screens
 - Validated FastAPI endpoints, CORS, JSON errors, and automatic Swagger docs
 - SQLAlchemy models, MySQL DDL/seed scripts, and sensor-event history
 - Isolated SQLite API tests, so tests do not modify a developer's MySQL data
+- ESP32 guide for LDR, LED, button, RFID, PIR, and ultrasonic sensors
 
 ## Architecture
 
@@ -32,7 +33,7 @@ Flutter mobile app
                     ▼
                   MySQL
 
-Future ESP32 ── HTTP/JSON ──► POST /api/v1/iot/readings
+ESP32 hardware ── HTTP/JSON ──► FastAPI /api/v1
 ```
 
 ## Repository structure
@@ -171,19 +172,17 @@ flutter run --dart-define=API_BASE_URL=http://192.168.1.25:8000
 Replace the example IP with the computer's actual address. Test
 `http://COMPUTER_IP:8000/health` in the phone browser if the app cannot connect.
 
-## Demo Controls
+## Hardware demo
 
-Open the **Demo** tab to:
+The ESP32 demo sends JSON to the same API used by the mobile app:
 
-- Open or close the library
-- Mark A1 and A2 available or occupied
-- Toggle PIR-style motion detection
-- Scan RFID UID `DEMO-RFID-001` to toggle staff presence
-- Restore the original demo state
+- LDR, LED, and button update whether the library is open or closed
+- RFID MFRC522 toggles staff presence
+- PIR sensor updates activity/motion
+- Ultrasonic sensors update seat A1 and A2 occupancy
 
-Each action calls the API and refreshes the complete status automatically.
-When the API cannot be reached, the app shows the latest cached status as
-possibly outdated. If there is no cache, it shows an error with Retry.
+See [docs/ESP32_HARDWARE.md](docs/ESP32_HARDWARE.md) for the wiring guide,
+Arduino sketch, RFID registration step, and upload checklist.
 
 ## API and state rules
 
@@ -229,10 +228,10 @@ flutter analyze
 flutter test
 ```
 
-## Future ESP32 connection
+## ESP32 connection
 
-Configure the ESP32 to send JSON over campus Wi-Fi to
-`POST /api/v1/iot/readings`:
+Configure the ESP32 to send JSON over Wi-Fi to the backend. Seat and motion
+readings go to `POST /api/v1/iot/readings`:
 
 ```json
 {
@@ -245,7 +244,6 @@ Configure the ESP32 to send JSON over campus Wi-Fi to
 }
 ```
 
-The endpoint already validates known seat codes, updates motion and seat
-readings in one transaction, records the raw event, and returns the refreshed
-library status. Before a production deployment, add device authentication,
-HTTPS, rate limiting, and per-device credentials.
+Library open/closed updates go to `PATCH /api/v1/library/state`, and RFID scans
+go to `POST /api/v1/staff/scan`. Before a production deployment, add device
+authentication, HTTPS, rate limiting, and per-device credentials.
